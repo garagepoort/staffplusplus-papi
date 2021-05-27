@@ -15,6 +15,7 @@ import static net.shortninja.staffplus.papi.Placeholders.placeholders;
 public class StaffPlusPlusPapi extends PlaceholderExpansion {
 
     public Map<String, String> placeholderCache = new HashMap<>();
+    private final PlaceholderService placeholderService = new PlaceholderService();
 
     private final String VERSION = getClass().getPackage().getImplementationVersion();
 
@@ -77,8 +78,9 @@ public class StaffPlusPlusPapi extends PlaceholderExpansion {
         }
 
         Optional<String> key = placeholders.keySet().stream().filter(params::startsWith).findFirst();
-        if(key.isPresent()) {
-            return placeholderCache.computeIfAbsent(params, s -> placeholders.get(key.get()).apply(params, plugin));
+        if (key.isPresent()) {
+            String finalParams = placeholderService.setPlaceholders(offlinePlayer, params);
+            return placeholderCache.computeIfAbsent(params, s -> placeholders.get(key.get()).apply(finalParams, plugin));
         }
         return null;
     }
