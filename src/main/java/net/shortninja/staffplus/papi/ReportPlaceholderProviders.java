@@ -1,9 +1,12 @@
 package net.shortninja.staffplus.papi;
 
 import net.shortninja.staffplusplus.IStaffPlus;
-import net.shortninja.staffplusplus.reports.ReportFilters.ReportFiltersBuilder;
+import net.shortninja.staffplusplus.reports.IReport;
+import net.shortninja.staffplusplus.reports.ReportFilters;
 import net.shortninja.staffplusplus.reports.ReportStatus;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -15,12 +18,39 @@ import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
-public class ReportPlaceholderProvider implements BiFunction<String, IStaffPlus, String> {
+public class ReportPlaceholderProviders {
 
-    @Override
-    public String apply(String placeholder, IStaffPlus iStaffPlus) {
+    static final BiFunction<String, IStaffPlus, String> REPORT_COUNT = (placeholder, iStaffPlus) -> {
         Map<String, String> filters = PlaceholderUtil.getFilters(placeholder);
-        ReportFiltersBuilder reportFiltersBuilder = new ReportFiltersBuilder();
+
+        return String.valueOf(iStaffPlus.getReportService().getReportCount(getReportFiltersBuilderFromParams(filters)));
+    };
+
+    static final BiFunction<String, IStaffPlus, String> LAST_REPORT_PLAYER = (placeholder, iStaffPlus) -> {
+        try {
+            Map<String, String> filters = PlaceholderUtil.getFilters(placeholder);
+
+            String withoutPrefix = placeholder.replace("reports_last_", "");
+            int index = Integer.parseInt(withoutPrefix.split("_")[0]);
+            String  placeholderMethod = withoutPrefix.split("_")[1];
+
+            List<? extends IReport> reports = iStaffPlus.getReportService().findReports(getReportFiltersBuilderFromParams(filters), 0, index);
+            if(index > reports.size()) {
+                return "";
+            }
+
+            IReport report = reports.get(index - 1);
+            String methodName = "get" + placeholderMethod.substring(0, 1).toUpperCase() + placeholderMethod.substring(1);
+            Method fieldGetter = report.getClass().getMethod(methodName);
+
+            return String.valueOf(fieldGetter.invoke(report));
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            return null;
+        }
+    };
+
+    static ReportFilters getReportFiltersBuilderFromParams(Map<String, String> filters) {
+        ReportFilters.ReportFiltersBuilder reportFiltersBuilder = new ReportFilters.ReportFiltersBuilder();
 
         List<ReportStatus> status = Arrays.asList(ReportStatus.values());
         if (filters.containsKey("status")) {
@@ -51,7 +81,6 @@ public class ReportPlaceholderProvider implements BiFunction<String, IStaffPlus,
         if (filters.containsKey("assignee")) reportFiltersBuilder.assigneeName(filters.get("assignee"));
         if (filters.containsKey("server")) reportFiltersBuilder.server(filters.get("server"));
         if (filters.containsKey("culprit")) reportFiltersBuilder.culpritName(filters.get("culprit"));
-
-        return String.valueOf(iStaffPlus.getReportService().getReportCount(reportFiltersBuilder.build()));
+        return reportFiltersBuilder.build();
     }
 }

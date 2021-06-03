@@ -80,7 +80,8 @@ public class StaffPlusPlusPapi extends PlaceholderExpansion {
         Optional<String> key = placeholders.keySet().stream().filter(params::startsWith).findFirst();
         if (key.isPresent()) {
             String finalParams = placeholderService.setPlaceholders(offlinePlayer, params);
-            return placeholderCache.computeIfAbsent(params, s -> placeholders.get(key.get()).apply(finalParams, plugin));
+            return placeholders.get(key.get()).apply(finalParams, plugin);
+//            return placeholderCache.computeIfAbsent(params, s -> placeholders.get(key.get()).apply(finalParams, plugin));
         }
         return null;
     }
