@@ -14,8 +14,10 @@ import static net.shortninja.staffplus.papi.Placeholders.placeholders;
 
 public class StaffPlusPlusPapi extends PlaceholderExpansion {
 
+    private static final int UPDATE_INTERVAL = 30000;
     public Map<String, String> placeholderCache = new HashMap<>();
     private final PlaceholderService placeholderService = new PlaceholderService();
+    private Long nextUpdateTimestamp = System.currentTimeMillis();
 
     private final String VERSION = getClass().getPackage().getImplementationVersion();
 
@@ -80,9 +82,20 @@ public class StaffPlusPlusPapi extends PlaceholderExpansion {
         Optional<String> key = placeholders.keySet().stream().filter(params::startsWith).findFirst();
         if (key.isPresent()) {
             String finalParams = placeholderService.setPlaceholders(offlinePlayer, params);
-            return placeholders.get(key.get()).apply(finalParams, plugin);
-//            return placeholderCache.computeIfAbsent(params, s -> placeholders.get(key.get()).apply(finalParams, plugin));
+            String result = placeholderCache.computeIfAbsent(params, s -> placeholders.get(key.get()).apply(finalParams, plugin));
+            if(getDuration(nextUpdateTimestamp) == 0) {
+                placeholderCache.clear();
+                nextUpdateTimestamp = System.currentTimeMillis() + UPDATE_INTERVAL;
+            }
+            return result;
         }
         return null;
+    }
+
+    private long getDuration(long timestamp) {
+        if (timestamp <= System.currentTimeMillis()) {
+            return 0;
+        }
+        return Math.abs(System.currentTimeMillis() - timestamp);
     }
 }

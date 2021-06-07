@@ -10,9 +10,9 @@ import java.util.function.BiFunction;
 
 public class BanPlaceholderProviders {
 
-    static final BiFunction<String, IStaffPlus, String> LAST_BANNED_PLAYERS = (s, iStaffPlus) -> {
+    static final BiFunction<String, IStaffPlus, String> NEWEST_BANNED_PLAYERS = (s, iStaffPlus) -> {
         try {
-            String withoutPrefix = s.replace("bans_last_", "");
+            String withoutPrefix = s.replace("bans_newest_", "");
             int index = Integer.parseInt(withoutPrefix.split("_")[0]);
             String  placeholderMethod = withoutPrefix.split("_")[1];
 

@@ -35,11 +35,11 @@ public class WarningPlaceholderProviders {
         return String.valueOf(iStaffPlus.getWarningService().getWarnCount(getWarningFiltersBuilderFromParams(filters)));
     };
 
-    static final BiFunction<String, IStaffPlus, String> LAST_WARNINGS = (placeholder, iStaffPlus) -> {
+    static final BiFunction<String, IStaffPlus, String> NEWEST_WARNINGS = (placeholder, iStaffPlus) -> {
         try {
             Map<String, String> filters = PlaceholderUtil.getFilters(placeholder);
 
-            String withoutPrefix = placeholder.replace("warnings_last_", "");
+            String withoutPrefix = placeholder.replace("warnings_newest_", "");
             int index = Integer.parseInt(withoutPrefix.split("_")[0]);
             String placeholderMethod = withoutPrefix.split("_")[1];
 

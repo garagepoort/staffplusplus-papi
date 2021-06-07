@@ -26,11 +26,11 @@ public class ReportPlaceholderProviders {
         return String.valueOf(iStaffPlus.getReportService().getReportCount(getReportFiltersBuilderFromParams(filters)));
     };
 
-    static final BiFunction<String, IStaffPlus, String> LAST_REPORT_PLAYER = (placeholder, iStaffPlus) -> {
+    static final BiFunction<String, IStaffPlus, String> NEWEST_REPORT_PLAYER = (placeholder, iStaffPlus) -> {
         try {
             Map<String, String> filters = PlaceholderUtil.getFilters(placeholder);
 
-            String withoutPrefix = placeholder.replace("reports_last_", "");
+            String withoutPrefix = placeholder.replace("reports_newest_", "");
             int index = Integer.parseInt(withoutPrefix.split("_")[0]);
             String  placeholderMethod = withoutPrefix.split("_")[1];
 

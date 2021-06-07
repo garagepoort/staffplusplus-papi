@@ -10,9 +10,9 @@ import java.util.function.BiFunction;
 
 public class MutePlaceholderProviders {
 
-    static final BiFunction<String, IStaffPlus, String> LAST_MUTED_PLAYER = (s, iStaffPlus) -> {
+    static final BiFunction<String, IStaffPlus, String> NEWEST_MUTED_PLAYER = (s, iStaffPlus) -> {
         try {
-            String withoutPrefix = s.replace("mutes_last_", "");
+            String withoutPrefix = s.replace("mutes_newest_", "");
             int index = Integer.parseInt(withoutPrefix.split("_")[0]);
             String  placeholderMethod = withoutPrefix.split("_")[1];
 
