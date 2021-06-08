@@ -1,34 +1,32 @@
-package net.shortninja.staffplus.papi;
+package net.shortninja.staffplus.papi.providers;
 
+import net.shortninja.staffplus.papi.common.FilterUtil;
 import net.shortninja.staffplusplus.IStaffPlus;
 import net.shortninja.staffplusplus.reports.IReport;
 import net.shortninja.staffplusplus.reports.ReportFilters;
 import net.shortninja.staffplusplus.reports.ReportStatus;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.temporal.TemporalAdjusters;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
+import static net.shortninja.staffplus.papi.common.FilterUtil.mapPeriodToTimestamp;
+import static net.shortninja.staffplus.papi.common.ReflectionUtil.getMethodValue;
+
 public class ReportPlaceholderProviders {
 
-    static final BiFunction<String, IStaffPlus, String> REPORT_COUNT = (placeholder, iStaffPlus) -> {
-        Map<String, String> filters = PlaceholderUtil.getFilters(placeholder);
+    public static final BiFunction<String, IStaffPlus, String> REPORT_COUNT = (placeholder, iStaffPlus) -> {
+        Map<String, String> filters = FilterUtil.getFilters(placeholder);
 
         return String.valueOf(iStaffPlus.getReportService().getReportCount(getReportFiltersBuilderFromParams(filters)));
     };
 
-    static final BiFunction<String, IStaffPlus, String> NEWEST_REPORT_PLAYER = (placeholder, iStaffPlus) -> {
+    public static final BiFunction<String, IStaffPlus, String> NEWEST_REPORT_PLAYER = (placeholder, iStaffPlus) -> {
         try {
-            Map<String, String> filters = PlaceholderUtil.getFilters(placeholder);
+            Map<String, String> filters = FilterUtil.getFilters(placeholder);
 
             String withoutPrefix = placeholder.replace("reports_newest_", "");
             int index = Integer.parseInt(withoutPrefix.split("_")[0]);
@@ -39,17 +37,13 @@ public class ReportPlaceholderProviders {
                 return "";
             }
 
-            IReport report = reports.get(index - 1);
-            String methodName = "get" + placeholderMethod.substring(0, 1).toUpperCase() + placeholderMethod.substring(1);
-            Method fieldGetter = report.getClass().getMethod(methodName);
-
-            return String.valueOf(fieldGetter.invoke(report));
+            return getMethodValue(placeholderMethod, reports.get(index - 1));
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             return null;
         }
     };
 
-    static ReportFilters getReportFiltersBuilderFromParams(Map<String, String> filters) {
+    private static ReportFilters getReportFiltersBuilderFromParams(Map<String, String> filters) {
         ReportFilters.ReportFiltersBuilder reportFiltersBuilder = new ReportFilters.ReportFiltersBuilder();
 
         List<ReportStatus> status = Arrays.asList(ReportStatus.values());
@@ -61,18 +55,8 @@ public class ReportPlaceholderProviders {
         }
         reportFiltersBuilder.anyOfReportStatus(status);
 
-        Long timestamp = null;
         if (filters.containsKey("period")) {
-            String period = filters.get("period");
-            if (period.equalsIgnoreCase("month")) {
-                timestamp = LocalDateTime.now().with(TemporalAdjusters.firstDayOfMonth()).atZone(ZoneId.systemDefault()).toEpochSecond() * 1000;
-            } else if (period.equalsIgnoreCase("week")) {
-                timestamp = LocalDateTime.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)).atZone(ZoneId.systemDefault()).toEpochSecond() * 1000;
-            } else if (period.equalsIgnoreCase("year")) {
-                timestamp = LocalDateTime.now().with(TemporalAdjusters.firstDayOfYear()).atZone(ZoneId.systemDefault()).toEpochSecond() * 1000;
-            } else if (period.equalsIgnoreCase("day")) {
-                timestamp = LocalDate.now().atStartOfDay().atZone(ZoneId.systemDefault()).toEpochSecond() * 1000;
-            }
+            long timestamp = mapPeriodToTimestamp(filters.get("period"));
             reportFiltersBuilder.createdAfter(timestamp);
         }
 

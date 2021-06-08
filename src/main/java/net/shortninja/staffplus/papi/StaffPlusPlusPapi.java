@@ -1,5 +1,6 @@
 package net.shortninja.staffplus.papi;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import net.shortninja.staffplusplus.IStaffPlus;
 import org.bukkit.Bukkit;
@@ -14,12 +15,12 @@ import static net.shortninja.staffplus.papi.Placeholders.placeholders;
 
 public class StaffPlusPlusPapi extends PlaceholderExpansion {
 
+    private final String version = getClass().getPackage().getImplementationVersion();
+
     private static final int UPDATE_INTERVAL = 30000;
-    public Map<String, String> placeholderCache = new HashMap<>();
-    private final PlaceholderService placeholderService = new PlaceholderService();
+    private Map<String, String> placeholderCache = new HashMap<>();
     private Long nextUpdateTimestamp = System.currentTimeMillis();
 
-    private final String VERSION = getClass().getPackage().getImplementationVersion();
 
     // We get an instance of the plugin later.
     private IStaffPlus plugin;
@@ -59,7 +60,7 @@ public class StaffPlusPlusPapi extends PlaceholderExpansion {
     }
 
     public @NotNull String getVersion() {
-        return VERSION;
+        return version;
     }
 
     /**
@@ -81,7 +82,7 @@ public class StaffPlusPlusPapi extends PlaceholderExpansion {
 
         Optional<String> key = placeholders.keySet().stream().filter(params::startsWith).findFirst();
         if (key.isPresent()) {
-            String finalParams = placeholderService.setPlaceholders(offlinePlayer, params);
+            String finalParams = setPlaceholders(offlinePlayer, params);
             String result = placeholderCache.computeIfAbsent(params, s -> placeholders.get(key.get()).apply(finalParams, plugin));
             if(getDuration(nextUpdateTimestamp) == 0) {
                 placeholderCache.clear();
@@ -90,6 +91,13 @@ public class StaffPlusPlusPapi extends PlaceholderExpansion {
             return result;
         }
         return null;
+    }
+
+    private String setPlaceholders(OfflinePlayer sender, String message) {
+        message = message
+                .replaceAll("\\$\\{", "%")
+                .replaceAll("\\}\\$", "%");
+        return PlaceholderAPI.setPlaceholders(sender, message);
     }
 
     private long getDuration(long timestamp) {

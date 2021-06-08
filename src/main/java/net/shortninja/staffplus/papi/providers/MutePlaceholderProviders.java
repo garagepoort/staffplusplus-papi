@@ -1,16 +1,17 @@
-package net.shortninja.staffplus.papi;
+package net.shortninja.staffplus.papi.providers;
 
 import net.shortninja.staffplusplus.IStaffPlus;
 import net.shortninja.staffplusplus.mute.IMute;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.List;
 import java.util.function.BiFunction;
 
+import static net.shortninja.staffplus.papi.common.ReflectionUtil.getMethodValue;
+
 public class MutePlaceholderProviders {
 
-    static final BiFunction<String, IStaffPlus, String> NEWEST_MUTED_PLAYER = (s, iStaffPlus) -> {
+    public static final BiFunction<String, IStaffPlus, String> NEWEST_MUTED_PLAYER = (s, iStaffPlus) -> {
         try {
             String withoutPrefix = s.replace("mutes_newest_", "");
             int index = Integer.parseInt(withoutPrefix.split("_")[0]);
@@ -21,11 +22,7 @@ public class MutePlaceholderProviders {
                 return "";
             }
 
-            IMute mute = mutes.get(index - 1);
-            String methodName = "get" + placeholderMethod.substring(0, 1).toUpperCase() + placeholderMethod.substring(1);
-            Method fieldGetter = mute.getClass().getMethod(methodName);
-
-            return String.valueOf(fieldGetter.invoke(mute));
+            return getMethodValue(placeholderMethod, mutes.get(index - 1));
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             return null;
         }

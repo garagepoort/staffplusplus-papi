@@ -1,5 +1,9 @@
 package net.shortninja.staffplus.papi;
 
+import net.shortninja.staffplus.papi.providers.BanPlaceholderProviders;
+import net.shortninja.staffplus.papi.providers.MutePlaceholderProviders;
+import net.shortninja.staffplus.papi.providers.ReportPlaceholderProviders;
+import net.shortninja.staffplus.papi.providers.WarningPlaceholderProviders;
 import net.shortninja.staffplusplus.IStaffPlus;
 import net.shortninja.staffplusplus.session.IPlayerSession;
 
