@@ -5,11 +5,9 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import net.shortninja.staffplusplus.IStaffPlus;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static net.shortninja.staffplus.papi.Placeholders.placeholders;
 
@@ -18,7 +16,7 @@ public class StaffPlusPlusPapi extends PlaceholderExpansion {
     private final String version = getClass().getPackage().getImplementationVersion();
 
     private static final int UPDATE_INTERVAL = 30000;
-    private Map<String, String> placeholderCache = new HashMap<>();
+    private Map<String, String> placeholderCache = new ConcurrentHashMap<>();
     private Long nextUpdateTimestamp = System.currentTimeMillis();
 
 
@@ -51,15 +49,15 @@ public class StaffPlusPlusPapi extends PlaceholderExpansion {
         return "StaffPlus";
     }
 
-    public @NotNull String getIdentifier() {
+    public String getIdentifier() {
         return "staffplusplus";
     }
 
-    public @NotNull String getAuthor() {
+    public String getAuthor() {
         return "Garagepoort";
     }
 
-    public @NotNull String getVersion() {
+    public String getVersion() {
         return version;
     }
 

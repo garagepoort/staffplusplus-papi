@@ -1,9 +1,6 @@
 package net.shortninja.staffplus.papi;
 
-import net.shortninja.staffplus.papi.providers.BanPlaceholderProviders;
-import net.shortninja.staffplus.papi.providers.MutePlaceholderProviders;
-import net.shortninja.staffplus.papi.providers.ReportPlaceholderProviders;
-import net.shortninja.staffplus.papi.providers.WarningPlaceholderProviders;
+import net.shortninja.staffplus.papi.providers.*;
 import net.shortninja.staffplusplus.IStaffPlus;
 import net.shortninja.staffplusplus.session.IPlayerSession;
 
@@ -30,6 +27,8 @@ public class Placeholders {
 
         placeholders.put("staff_members_online", (p, s) -> String.valueOf(s.getSessionManager().getOnlineStaffMembers().size()));
         placeholders.put("staff_members_in_mode", (p, s) -> String.valueOf(s.getSessionManager().getAll().stream().filter(IPlayerSession::isInStaffMode).count()));
+
+        placeholders.put("session", SessionProviders.SESSION_VALUE);
 
         placeholders.put("reports_count", ReportPlaceholderProviders.REPORT_COUNT);
         placeholders.put("reports_newest", ReportPlaceholderProviders.NEWEST_REPORT_PLAYER);

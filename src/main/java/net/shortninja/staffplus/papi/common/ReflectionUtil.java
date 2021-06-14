@@ -11,4 +11,14 @@ public class ReflectionUtil {
         return String.valueOf(fieldGetter.invoke(object));
     }
 
+    public static String findMethodValue(String placeholderMethod, Object object) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+        String methodName = "get" + placeholderMethod.substring(0, 1).toUpperCase() + placeholderMethod.substring(1);
+        for (Method method : object.getClass().getMethods()) {
+            if(method.getName().toLowerCase().contains(placeholderMethod.toLowerCase())) {
+                return String.valueOf(method.invoke(object));
+            }
+        }
+        return null;
+    }
+
 }
