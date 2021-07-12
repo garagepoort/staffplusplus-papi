@@ -13,8 +13,6 @@ import static net.shortninja.staffplus.papi.Placeholders.placeholders;
 
 public class StaffPlusPlusPapi extends PlaceholderExpansion {
 
-    private final String version = getClass().getPackage().getImplementationVersion();
-
     private static final int UPDATE_INTERVAL = 30000;
     private Map<String, String> placeholderCache = new ConcurrentHashMap<>();
     private Long nextUpdateTimestamp = System.currentTimeMillis();
@@ -58,7 +56,7 @@ public class StaffPlusPlusPapi extends PlaceholderExpansion {
     }
 
     public String getVersion() {
-        return version;
+        return "1.2.0";
     }
 
     /**

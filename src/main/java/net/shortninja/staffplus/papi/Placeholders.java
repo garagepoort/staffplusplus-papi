@@ -3,10 +3,14 @@ package net.shortninja.staffplus.papi;
 import net.shortninja.staffplus.papi.providers.*;
 import net.shortninja.staffplusplus.IStaffPlus;
 import net.shortninja.staffplusplus.session.IPlayerSession;
+import org.bukkit.Bukkit;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 
 public class Placeholders {
 
@@ -27,6 +31,11 @@ public class Placeholders {
 
         placeholders.put("staff_members_online", (p, s) -> String.valueOf(s.getSessionManager().getOnlineStaffMembers().size()));
         placeholders.put("staff_members_in_mode", (p, s) -> String.valueOf(s.getSessionManager().getAll().stream().filter(IPlayerSession::isInStaffMode).count()));
+
+        placeholders.put("player_count", (p, s) -> {
+            List<UUID> vanishedPlayers = s.getSessionManager().getAll().stream().filter(IPlayerSession::isVanished).map(IPlayerSession::getUuid).collect(Collectors.toList());
+            return String.valueOf(Bukkit.getOnlinePlayers().stream().filter(onlinePlayer -> !vanishedPlayers.contains(onlinePlayer.getUniqueId())).count());
+        });
 
         placeholders.put("session", SessionProviders.SESSION_VALUE);
 
