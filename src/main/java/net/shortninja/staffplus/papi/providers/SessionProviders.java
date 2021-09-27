@@ -23,6 +23,8 @@ public class SessionProviders {
             if(!filters.containsKey("player")) {
                 return null;
             }
+            String defaultValue = filters.getOrDefault("default", "");
+
             String player = filters.get("player");
             Player playerExact = Bukkit.getPlayerExact(player);
             if(playerExact == null) {
@@ -31,7 +33,7 @@ public class SessionProviders {
 
             IPlayerSession iPlayerSession = iStaffPlus.getSessionManager().get(playerExact.getUniqueId());
 
-            return findMethodValue(placeholderMethod, iPlayerSession);
+            return findMethodValue(placeholderMethod, iPlayerSession, defaultValue);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             return null;
         }

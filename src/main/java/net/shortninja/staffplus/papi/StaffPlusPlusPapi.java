@@ -1,32 +1,25 @@
 package net.shortninja.staffplus.papi;
 
 import me.clip.placeholderapi.PlaceholderAPI;
+import me.clip.placeholderapi.expansion.Configurable;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import net.shortninja.staffplusplus.IStaffPlus;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static net.shortninja.staffplus.papi.Placeholders.placeholders;
 
-public class StaffPlusPlusPapi extends PlaceholderExpansion {
+public class StaffPlusPlusPapi extends PlaceholderExpansion implements Configurable {
 
-    private static final int UPDATE_INTERVAL = 30000;
-    private Map<String, String> placeholderCache = new ConcurrentHashMap<>();
+    private final Map<String, String> placeholderCache = new ConcurrentHashMap<>();
     private Long nextUpdateTimestamp = System.currentTimeMillis();
-
-
-    // We get an instance of the plugin later.
     private IStaffPlus plugin;
 
-    /**
-     * Since this expansion requires api access to the plugin "SomePlugin"
-     * we must check if said plugin is on the server or not.
-     *
-     * @return true or false depending on if the required plugin is installed.
-     */
     @Override
     public boolean canRegister() {
         if (!Bukkit.getPluginManager().isPluginEnabled(getRequiredPlugin())) {
@@ -35,13 +28,12 @@ public class StaffPlusPlusPapi extends PlaceholderExpansion {
         plugin = (IStaffPlus) Bukkit.getPluginManager().getPlugin(getRequiredPlugin());
         return plugin != null;
     }
-
-
-    /**
-     * Returns the name of the required plugin.
-     *
-     * @return {@code DeluxeTags} as String
-     */
+    @Override
+    public Map<String, Object> getDefaults() {
+        final Map<String, Object> defaults = new HashMap<>();
+        defaults.put("cache-clear-interval", 30000);
+        return defaults;
+    }
     @Override
     public String getRequiredPlugin() {
         return "StaffPlus";
@@ -56,17 +48,9 @@ public class StaffPlusPlusPapi extends PlaceholderExpansion {
     }
 
     public String getVersion() {
-        return "1.2.0";
+        return "1.3.0";
     }
 
-    /**
-     * This method is called when a placeholder is used and maches the set
-     * {@link #getIdentifier() identifier}
-     *
-     * @param offlinePlayer The player to parse placeholders for
-     * @param params        The part after the identifier ({@code %identifier_params%})
-     * @return Possible-null String
-     */
     @Override
     public String onRequest(OfflinePlayer offlinePlayer, String params) {
         if (params.equals("test")) {
@@ -82,7 +66,7 @@ public class StaffPlusPlusPapi extends PlaceholderExpansion {
             String result = placeholderCache.computeIfAbsent(params, s -> placeholders.get(key.get()).apply(finalParams, plugin));
             if(getDuration(nextUpdateTimestamp) == 0) {
                 placeholderCache.clear();
-                nextUpdateTimestamp = System.currentTimeMillis() + UPDATE_INTERVAL;
+                nextUpdateTimestamp = System.currentTimeMillis() + this.getLong("cache-clear-interval", 30000);
             }
             return result;
         }

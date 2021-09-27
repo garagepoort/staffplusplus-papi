@@ -31,12 +31,12 @@ public class Placeholders {
 
         placeholders.put("staff_members_online", (p, s) -> String.valueOf(s.getSessionManager().getOnlineStaffMembers().size()));
         placeholders.put("staff_members_in_mode", (p, s) -> String.valueOf(s.getSessionManager().getAll().stream().filter(IPlayerSession::isInStaffMode).count()));
+        placeholders.put("staff_members_vanished", (p, s) -> String.valueOf(s.getSessionManager().getAll().stream().filter(IPlayerSession::isVanished).count()));
 
         placeholders.put("player_count", (p, s) -> {
             List<UUID> vanishedPlayers = s.getSessionManager().getAll().stream().filter(IPlayerSession::isVanished).map(IPlayerSession::getUuid).collect(Collectors.toList());
             return String.valueOf(Bukkit.getOnlinePlayers().stream().filter(onlinePlayer -> !vanishedPlayers.contains(onlinePlayer.getUniqueId())).count());
         });
-
         placeholders.put("session", SessionProviders.SESSION_VALUE);
 
         placeholders.put("reports_count", ReportPlaceholderProviders.REPORT_COUNT);
