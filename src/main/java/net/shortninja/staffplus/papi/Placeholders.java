@@ -31,7 +31,6 @@ public class Placeholders {
 
         placeholders.put("staff_members_online", (p, s) -> String.valueOf(s.getSessionManager().getOnlineStaffMembers().size()));
         placeholders.put("staff_members_in_mode", (p, s) -> String.valueOf(s.getSessionManager().getAll().stream().filter(IPlayerSession::isInStaffMode).count()));
-        placeholders.put("players_online", (p, s) -> String.valueOf(s.getSessionManager().getAll().stream().filter(session -> !session.isVanished()).count()));
         placeholders.put("staff_members_vanished", (p, s) -> String.valueOf(s.getSessionManager().getAll().stream().filter(IPlayerSession::isVanished).count()));
 
         placeholders.put("player_count", (p, s) -> {
