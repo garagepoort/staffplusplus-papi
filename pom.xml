@@ -6,16 +6,15 @@
 
     <groupId>net.shortninja.staffplus</groupId>
     <artifactId>staffplusplus-papi</artifactId>
-    <version>1.4.0</version>
+    <version>1.5.0</version>
     <repositories>
         <repository>
             <id>placeholderapi</id>
             <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
         <repository>
-            <id>repsy-staffplusplus</id>
-            <name>staffplusplus-deps</name>
-            <url>https://repo.repsy.io/mvn/garagepoort/staffplusplus</url>
+            <id>staffplusplus-repo</id>
+            <url>https://nexus.staffplusplus.org/repository/staffplusplus/</url>
         </repository>
         <repository>
             <id>spigot-repo</id>
@@ -43,11 +42,12 @@
         </dependency>
     </dependencies>
 
+
     <distributionManagement>
         <repository>
-            <id>repsy-staffplusplus</id>
-            <name>Staff++ Repsy Repo</name>
-            <url>https://repo.repsy.io/mvn/garagepoort/staffplusplus</url>
+            <id>staffplusplus-repo</id>
+            <name>Central Repository StaffPlusPlus</name>
+            <url>https://nexus.staffplusplus.org/repository/maven-releases/</url>
         </repository>
     </distributionManagement>
 

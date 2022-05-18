@@ -7,7 +7,9 @@ import net.shortninja.staffplusplus.IStaffPlus;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -32,6 +34,7 @@ public class StaffPlusPlusPapi extends PlaceholderExpansion implements Configura
     public Map<String, Object> getDefaults() {
         final Map<String, Object> defaults = new HashMap<>();
         defaults.put("cache-clear-interval", 30000);
+        defaults.put("cache-disabled-placeholders", new ArrayList<>());
         return defaults;
     }
     @Override
@@ -48,7 +51,7 @@ public class StaffPlusPlusPapi extends PlaceholderExpansion implements Configura
     }
 
     public String getVersion() {
-        return "1.3.0";
+        return "1.5.0";
     }
 
     @Override
@@ -62,11 +65,17 @@ public class StaffPlusPlusPapi extends PlaceholderExpansion implements Configura
 
         Optional<String> key = placeholders.keySet().stream().filter(params::startsWith).findFirst();
         if (key.isPresent()) {
+            List<String> disabledPlaceholders = this.getStringList("cache-disabled-placeholders");
             String finalParams = setPlaceholders(offlinePlayer, params);
-            String result = placeholderCache.computeIfAbsent(params, s -> placeholders.get(key.get()).apply(finalParams, plugin));
-            if(getDuration(nextUpdateTimestamp) == 0) {
-                placeholderCache.clear();
-                nextUpdateTimestamp = System.currentTimeMillis() + this.getLong("cache-clear-interval", 30000);
+            String result;
+            if(disabledPlaceholders.contains(key.get())) {
+                result = placeholders.get(key.get())    .apply(finalParams, plugin);
+            }else{
+                result = placeholderCache.computeIfAbsent(params, s -> placeholders.get(key.get()).apply(finalParams, plugin));
+                if(getDuration(nextUpdateTimestamp) == 0) {
+                    placeholderCache.clear();
+                    nextUpdateTimestamp = System.currentTimeMillis() + this.getLong("cache-clear-interval", 30000);
+                }
             }
             return result;
         }
