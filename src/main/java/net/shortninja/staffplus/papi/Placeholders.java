@@ -20,6 +20,7 @@ public class Placeholders {
         placeholders.put("bans_all_count", (p, s) -> String.valueOf(s.getBanService().getTotalBanCount()));
         placeholders.put("bans_active_count", (p, s) -> String.valueOf(s.getBanService().getActiveBanCount()));
         placeholders.put("bans_newest", BanPlaceholderProviders.NEWEST_BANNED_PLAYERS);
+        placeholders.put("bans_count", BanPlaceholderProviders.BAN_COUNT);
 
         placeholders.put("mutes_all_count", (p, s) -> String.valueOf(s.getMuteService().getTotalMuteCount()));
         placeholders.put("mutes_active_count", (p, s) -> String.valueOf(s.getMuteService().getActiveMuteCount()));

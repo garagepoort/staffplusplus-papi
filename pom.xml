@@ -6,7 +6,7 @@
 
     <groupId>net.shortninja.staffplus</groupId>
     <artifactId>staffplusplus-papi</artifactId>
-    <version>1.5.0</version>
+    <version>1.6.0</version>
     <repositories>
         <repository>
             <id>placeholderapi</id>
@@ -31,7 +31,7 @@
         <dependency>
             <groupId>net.shortninja.staffplus</groupId>
             <artifactId>staffplusplus-api</artifactId>
-            <version>8.0.1</version>
+            <version>8.0.2</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
