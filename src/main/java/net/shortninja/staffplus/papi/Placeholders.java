@@ -25,6 +25,7 @@ public class Placeholders {
         placeholders.put("mutes_all_count", (p, s) -> String.valueOf(s.getMuteService().getTotalMuteCount()));
         placeholders.put("mutes_active_count", (p, s) -> String.valueOf(s.getMuteService().getActiveMuteCount()));
         placeholders.put("mutes_newest", MutePlaceholderProviders.NEWEST_MUTED_PLAYER);
+        placeholders.put("mutes_count", MutePlaceholderProviders.MUTE_COUNT);
 
         placeholders.put("warnings_count", WarningPlaceholderProviders.WARN_COUNT);
         placeholders.put("warnings_newest", WarningPlaceholderProviders.NEWEST_WARNINGS);
