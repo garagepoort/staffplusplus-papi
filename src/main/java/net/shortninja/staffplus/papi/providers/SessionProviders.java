@@ -31,7 +31,7 @@ public class SessionProviders {
                 return null;
             }
 
-            IPlayerSession iPlayerSession = iStaffPlus.getSessionManager().get(playerExact.getUniqueId());
+            IPlayerSession iPlayerSession = iStaffPlus.getSessionManager().get(playerExact);
 
             return findMethodValue(placeholderMethod, iPlayerSession, defaultValue);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
