@@ -7,7 +7,7 @@ import net.shortninja.staffplusplus.IStaffPlus;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +34,7 @@ public class StaffPlusPlusPapi extends PlaceholderExpansion implements Configura
     public Map<String, Object> getDefaults() {
         final Map<String, Object> defaults = new HashMap<>();
         defaults.put("cache-clear-interval", 30000);
-        defaults.put("cache-disabled-placeholders", new ArrayList<>());
+        defaults.put("cache-disabled-placeholders", Arrays.asList("session", "player_count"));
         return defaults;
     }
     @Override
@@ -69,7 +69,7 @@ public class StaffPlusPlusPapi extends PlaceholderExpansion implements Configura
             String finalParams = setPlaceholders(offlinePlayer, params);
             String result;
             if(disabledPlaceholders.contains(key.get())) {
-                result = placeholders.get(key.get())    .apply(finalParams, plugin);
+                result = placeholders.get(key.get()).apply(finalParams, plugin);
             }else{
                 result = placeholderCache.computeIfAbsent(params, s -> placeholders.get(key.get()).apply(finalParams, plugin));
                 if(getDuration(nextUpdateTimestamp) == 0) {
