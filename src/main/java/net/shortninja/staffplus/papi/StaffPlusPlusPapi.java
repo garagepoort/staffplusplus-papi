@@ -39,7 +39,7 @@ public class StaffPlusPlusPapi extends PlaceholderExpansion implements Configura
     }
     @Override
     public String getRequiredPlugin() {
-        return "StaffPlus";
+        return "StaffPlusPlus";
     }
 
     public String getIdentifier() {
