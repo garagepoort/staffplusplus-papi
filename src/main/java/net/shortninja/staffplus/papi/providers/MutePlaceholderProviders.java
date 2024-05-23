@@ -56,6 +56,8 @@ public class MutePlaceholderProviders {
         if (filters.containsKey("issuer")) muteFiltersBuilder.issuerName(filters.get("issuer"));
         if (filters.containsKey("target")) muteFiltersBuilder.targetName(filters.get("target"));
         if (filters.containsKey("server")) muteFiltersBuilder.server(filters.get("server"));
+        if (filters.containsKey("reason")) muteFiltersBuilder.reason(filters.get("reason"));
+
         return muteFiltersBuilder.build();
     }
 }

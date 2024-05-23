@@ -56,6 +56,7 @@ public class BanPlaceholderProviders {
         if (filters.containsKey("issuer")) banFiltersBuilder.issuerName(filters.get("issuer"));
         if (filters.containsKey("target")) banFiltersBuilder.targetName(filters.get("target"));
         if (filters.containsKey("server")) banFiltersBuilder.server(filters.get("server"));
+        if (filters.containsKey("reason")) banFiltersBuilder.reason(filters.get("reason"));
         return banFiltersBuilder.build();
     }
 }
